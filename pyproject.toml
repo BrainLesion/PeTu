@@ -1,0 +1,38 @@
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+
+[tool.poetry]
+name = "package_name"
+version = "0.0.0"
+description = ""
+authors = ["Florian Kofler <florian.kofler@tum.de>"]
+repository = "https://www.TODO.com"
+homepage = "https://www.TODO.com"
+documentation = "https://www.TODO.com"
+readme = "README.md"
+
+
+# Add the exclude field directly under [tool.poetry]
+exclude = ["examples", "benchmark"]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+
+
+[tool.poetry.dev-dependencies]
+pytest = ">=8.0.0"
+pytest-cov = ">=5.0.0"
+flake8 = ">=4.0.1"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = ">=7.0.0"
+sphinx-copybutton = ">=0.5.2"
+furo = ">=2024.8.6"
+myst-parser = ">=2.0.0"
