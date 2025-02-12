@@ -5,6 +5,7 @@ import logging
 import os
 import signal
 import sys
+import tempfile
 import traceback
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -12,9 +13,10 @@ from typing import Dict, Optional
 
 import numpy as np
 import torch
+from loguru import logger
 
 from package_name.data_handler import DataHandler
-from loguru import logger
+from package_name.model_handler import ModelHandler
 
 
 class Inferer:
@@ -77,15 +79,19 @@ class Inferer:
             images=validated_images
         )
 
-        input_files = self.data_handler.get_input_files(images=validated_images)
-
         self.model_handler.load_model(
             inference_mode=determined_inference_mode,
         )
 
-        logger.info(f"Running inference on device := {self.device}")
-        out = self.model_handler.infer()
-        logger.info(f"Finished inference")
+        with tempfile.TemporaryDirectory() as tmpdir:
+
+            input_files = self.data_handler.get_input_files(
+                images=validated_images, tmp_folder=Path(tmpdir)
+            )
+
+            logger.info(f"Running inference on device := {self.device}")
+            self.model_handler.infer(input_files=input_files)
+            logger.info(f"Finished inference")
 
         # save data to fie if paths are provided
         # if any(output_file_mapping.values()):
