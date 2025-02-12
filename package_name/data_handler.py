@@ -2,13 +2,18 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Dict, List
-
+from typing import List, Optional
 
 import nibabel as nib
 import numpy as np
-from package_name.constants import IMGS_TO_MODE_DICT, DataMode, InferenceMode
 from loguru import logger
+
+from package_name.constants import (
+    ATLAS_SPACE_SHAPE,
+    IMGS_TO_MODE_DICT,
+    DataMode,
+    InferenceMode,
+)
 
 
 class DataHandler:
@@ -20,6 +25,7 @@ class DataHandler:
         self.num_input_modalities = None
         self.reference_nifti_file = None
 
+    @property
     def get_input_mode(self) -> DataMode:
         """Get the input mode.
 
@@ -39,7 +45,6 @@ class DataHandler:
     #     Returns:
     #         int: Number of input modalities.
     #     Raises:
-
     #         AssertionError: If the number of input modalities is not set (i.e. input images were not validated)
     #     """
     #     assert (
@@ -61,6 +66,18 @@ class DataHandler:
         ), "Reference NIfTI file not set. Please ensure you provided paths to NIfTI images and validated the input images first by calling .validate_images(...)."
         return self.reference_nifti_file
 
+    def _validate_shape(self, data: np.ndarray) -> None:
+        """Validate the shape of the input data.
+
+        Args:
+            data (np.ndarray): Input data.
+        Raises:
+            AssertionError: If the shape of the input data does not match the standard atlas space shape.
+        """
+        assert (
+            data.shape == ATLAS_SPACE_SHAPE
+        ), f"Invalid shape for input data, should match standard atlas space shape: {ATLAS_SPACE_SHAPE}"
+
     def validate_images(
         self,
         t1c: str | Path | np.ndarray | None = None,
@@ -69,13 +86,17 @@ class DataHandler:
         t2: str | Path | np.ndarray | None = None,
     ) -> List[np.ndarray | None] | List[Path | None]:
         """Validate the input images. \n
-        Verify that the input images exist (for paths) and are all of the same type (NumPy or NIfTI).
+        Verify that the input images
+            - exist (for paths)
+            - are all of the same type (NumPy or NIfTI).
+            - have the correct shape (ATLAS_SPACE_SHAPE).
+
         Sets internal variables input_mode, num_input_modalities and reference_nifti_file.
 
         Args:
-            t1 (str | Path | np.ndarray | None, optional): T1 modality. Defaults to None.
-            fla (str | Path | np.ndarray | None, optional): FLAIR modality. Defaults to None.
             t1c (str | Path | np.ndarray | None, optional): T1C modality. Defaults to None.
+            fla (str | Path | np.ndarray | None, optional): FLAIR modality. Defaults to None.
+            t1 (str | Path | np.ndarray | None, optional): T1 modality. Defaults to None.
             t2 (str | Path | np.ndarray | None, optional): T2 modality. Defaults to None.
 
         Returns:
@@ -93,16 +114,20 @@ class DataHandler:
                 return None
             if isinstance(data, np.ndarray):
                 self.input_mode = DataMode.NUMPY
+                self._validate_shape(data)
                 return data.astype(np.float32)
 
             data = Path(data)
             if not data.exists():
                 raise FileNotFoundError(f"File {data} not found")
 
-            if not (data.name.endswith(".nii.gz") or data.name.endswith(".nii")):
+            if not (data.suffix == ".nii" or data.suffixes == [".nii", ".gz"]):
                 raise ValueError(
                     f"File {data} must be a NIfTI file with extension .nii or .nii.gz"
                 )
+
+            self._validate_shape(nib.load(data).get_fdata())
+
             self.input_mode = DataMode.NIFTI_FILE
             return data.absolute()
 
@@ -146,18 +171,56 @@ class DataHandler:
         assert (
             self.input_mode is not None
         ), "Please validate the input images first by calling validate_images(...)."
+
         _t1c, _flair, _t1, _t2 = [img is not None for img in images]
         logger.debug(
-            f"Received files: T1: {_t1}, T1C: {_t1c}, T2: {_t2}, FLAIR: {_flair}"
+            f"Received files: T1C: {_t1c}, FLAIR: {_flair}, T1: {_t1}, T2: {_t2}"
         )
         # check if files are given in a valid combination that has an existing model implementation
         mode = IMGS_TO_MODE_DICT.get((_t1c, _flair, _t1, _t2), None)
         if mode is None:
             raise NotImplementedError(
-                f"No model implemented for this combination of images: T1: {_t1}, T1C: {_t1c}, T2: {_t2}, FLAIR: {_flair}. {os.linesep}Available models: {[mode.value for mode in InferenceMode]}"
+                f"No model implemented for this combination of images: T1C: {_t1c}, FLAIR: {_flair}, T1: {_t1}, T2: {_t2}. {os.linesep}Available models: {[mode.value for mode in InferenceMode]}"
             )
         logger.info(f"Inference mode: {mode}")
         return mode
+
+    def get_input_files(
+        self,
+        images: List[np.ndarray | None] | List[Path | None],
+        tmp_folder: Optional[Path] = None,
+    ) -> List[np.ndarray]:
+        """Load the input images based on the input mode.
+
+        Args:
+            images (List[np.ndarray | None] | List[Path | None]): List of validated images.
+        Returns:
+            List[Path]: List of input images (NIFTI paths).
+        Raises:
+            AssertionError: If the input mode is not set (i.e. input images were not validated)
+        """
+        assert (
+            self.input_mode is not None
+        ), "Please validate the input images first by calling validate_images(...)."
+
+        if self.input_mode == DataMode.NIFTI_FILE:
+            return [img for img in images if img is not None]
+        elif self.input_mode == DataMode.NUMPY:
+            if tmp_folder is None:
+                raise ValueError(
+                    "Please provide a temporary folder when using NumPy input mode."
+                )
+            input_files = []
+            for idx, img in enumerate(images):
+                if img is not None:
+                    input_file = tmp_folder / f"input_{idx}.nii.gz"
+                    nib.save(nib.Nifti1Image(img, np.eye(4)), input_file)
+                    input_files.append(input_file)
+            return input_files
+        else:
+            raise NotImplementedError(
+                f"Input mode {self.input_mode} not implemented. Available modes: {list(DataMode)}"
+            )
 
     # def save_as_nifti(
     #     self, postproc_data: Dict[str, np.ndarray], output_file_mapping: Dict[str, str]

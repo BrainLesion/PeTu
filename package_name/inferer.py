@@ -29,7 +29,7 @@ class Inferer:
             cuda_visible_devices=cuda_visible_devices,
         )
         self.data_handler = DataHandler()
-        # self.model_handler = ModelHandler(config=self.config, device=self.device)
+        self.model_handler = ModelHandler(device=self.device)
 
     def _configure_device(
         self, requested_device: str, cuda_visible_devices: str
@@ -77,13 +77,14 @@ class Inferer:
             images=validated_images
         )
 
-        # self.model_handler.load_model(
-        #     inference_mode=determined_inference_mode,
-        #     num_input_modalities=self.data_handler.get_num_input_modalities(),
-        # )
+        input_files = self.data_handler.get_input_files(images=validated_images)
+
+        self.model_handler.load_model(
+            inference_mode=determined_inference_mode,
+        )
 
         logger.info(f"Running inference on device := {self.device}")
-        # out = self.model_handler.infer(data_loader=data_loader)
+        out = self.model_handler.infer()
         logger.info(f"Finished inference")
 
         # save data to fie if paths are provided
