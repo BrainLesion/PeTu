@@ -85,3 +85,9 @@ ATLAS_SPACE_SHAPE = (240, 240, 155)
 
 SEGMENTATION_THRESHOLD = 0.5
 SEGMENTATION_LABELS = ["ET", "CC", "T2H"]
+
+NNUNET_ENV_VARS = [
+    "nnUNet_raw",
+    "nnUNet_preprocessed",
+    "nnUNet_results",
+]
