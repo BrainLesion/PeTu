@@ -185,7 +185,7 @@ class DataHandler:
         logger.info(f"Inference mode: {mode}")
         return mode
 
-    def get_input_files(
+    def get_input_file_paths(
         self,
         images: List[np.ndarray | None] | List[Path | None],
         tmp_folder: Optional[Path] = None,

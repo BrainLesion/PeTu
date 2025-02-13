@@ -79,3 +79,6 @@ WEIGHTS_DIR_PATTERN = "weights_v*.*.*"
 """Directory name pattern to store model weights. E.g. weights_v1.0.0"""
 
 ATLAS_SPACE_SHAPE = (240, 240, 155)
+
+SEGMENTATION_THRESHOLD = 0.5
+SEGMENTATION_LABELS = ["ET", "CC", "T2H"]

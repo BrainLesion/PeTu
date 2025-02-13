@@ -62,13 +62,13 @@ class Inferer:
     # @citation_reminder
     def infer(
         self,
-        t1c: str | Path | np.ndarray | None = None,
-        fla: str | Path | np.ndarray | None = None,
-        t1: str | Path | np.ndarray | None = None,
-        t2: str | Path | np.ndarray | None = None,
-        CC_segmentation_file: str | Path | None = None,
-        ET_segmentation_file: str | Path | None = None,
-        T2H_segmentation_file: str | Path | None = None,
+        t1c: Optional[str | Path | np.ndarray] = None,
+        fla: Optional[str | Path | np.ndarray] = None,
+        t1: Optional[str | Path | np.ndarray] = None,
+        t2: Optional[str | Path | np.ndarray] = None,
+        ET_segmentation_file: Optional[str | Path] = None,
+        CC_segmentation_file: Optional[str | Path] = None,
+        T2H_segmentation_file: Optional[str | Path] = None,
     ) -> Dict[str, np.ndarray]:
 
         # check inputs and get mode , if mode == prev mode => run inference, else load new model
@@ -85,19 +85,17 @@ class Inferer:
 
         with tempfile.TemporaryDirectory() as tmpdir:
 
-            input_files = self.data_handler.get_input_files(
-                images=validated_images, tmp_folder=Path(tmpdir)
+            input_file_paths = self.data_handler.get_input_file_paths(
+                images=validated_images,
+                tmp_folder=Path(tmpdir),
             )
 
             logger.info(f"Running inference on device := {self.device}")
-            self.model_handler.infer(input_files=input_files)
+            np_results = self.model_handler.infer(
+                input_file_paths=input_file_paths,
+                ET_segmentation_file=ET_segmentation_file,
+                CC_segmentation_file=CC_segmentation_file,
+                T2H_segmentation_file=T2H_segmentation_file,
+            )
             logger.info(f"Finished inference")
-
-        # save data to fie if paths are provided
-        # if any(output_file_mapping.values()):
-        #     logger.info("Saving post-processed data as NIfTI files")
-        #     self.data_handler.save_as_nifti(
-        #         postproc_data=out, output_file_mapping=output_file_mapping
-        #     )
-        # logger.info(f"{' Finished inference run ':=^80}")
-        # return out
+            return np_results
