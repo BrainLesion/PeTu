@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import logging
-import os
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import nibabel as nib
 import numpy as np
@@ -12,13 +10,7 @@ import torch
 from loguru import logger
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 
-from petu.constants import (
-    SEGMENTATION_THRESHOLD,
-    WEIGHTS_DIR_PATTERN,
-    InferenceMode,
-    SEGMENTATION_LABELS,
-)
-
+from petu.constants import SEGMENTATION_LABELS, SEGMENTATION_THRESHOLD, InferenceMode
 from petu.weights import check_weights_path
 
 
@@ -26,6 +18,15 @@ class ModelHandler:
     """Class for model loading, inference and post processing"""
 
     def __init__(self, device: torch.device) -> "ModelHandler":
+        """Initialize the ModelHandler class.
+
+        Args:
+            device (torch.device): Device to use for inference.
+
+        Returns:
+            ModelHandler: ModelHandler instance.
+        """
+
         self.device = device
         # Will be set during infer() call
         self.predictor = None
@@ -35,6 +36,11 @@ class ModelHandler:
         self.model_weights_folder = check_weights_path()
 
     def load_model(self, inference_mode: InferenceMode) -> None:
+        """Load the model for inference based on the inference mode
+
+        Args:
+            inference_mode (InferenceMode): inference mode (determined by passed images)
+        """
 
         if not self.predictor or self.inference_mode != inference_mode:
             logger.debug(
@@ -58,6 +64,14 @@ class ModelHandler:
     def threshold_probabilities(
         self, results_dir: Path
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """Threshold the probabilities to get binary segmentations.
+
+        Args:
+            results_dir (Path): output directory of the nnUNet inference.
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]: Tuple of binary segmentations (ET, CC, T2H) and affine matrix.
+        """
 
         nifti_file = next(results_dir.glob("*.nii.gz"))
         affine = nib.load(nifti_file).affine
@@ -81,6 +95,17 @@ class ModelHandler:
         CC_segmentation_file: Optional[str | Path] = None,
         T2H_segmentation_file: Optional[str | Path] = None,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Run inference on the provided images and save the segmentations to disk if paths are provided.
+
+        Args:
+            input_file_paths (List[Path]): _description_
+            ET_segmentation_file (Optional[str  |  Path], optional): Path to save ET segmentation. Defaults to None.
+            CC_segmentation_file (Optional[str  |  Path], optional): Path to save CC segmentation. Defaults to None.
+            T2H_segmentation_file (Optional[str  |  Path], optional): Path to save T2H segmentation. Defaults to None.
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray, np.ndarray]: Tuple of segmentations: (ET, CC, T2H) as numpy arrays.
+        """
 
         with tempfile.TemporaryDirectory() as tmpdir:
             str_paths = [str(f) for f in input_file_paths]

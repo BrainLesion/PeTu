@@ -8,12 +8,7 @@ import nibabel as nib
 import numpy as np
 from loguru import logger
 
-from petu.constants import (
-    ATLAS_SPACE_SHAPE,
-    IMGS_TO_MODE_DICT,
-    DataMode,
-    InferenceMode,
-)
+from petu.constants import ATLAS_SPACE_SHAPE, IMGS_TO_MODE_DICT, DataMode, InferenceMode
 
 
 class DataHandler:
@@ -22,7 +17,6 @@ class DataHandler:
     def __init__(self) -> "DataHandler":
         # Following will be inferred from the input images during validation
         self.input_mode = None
-        self.num_input_modalities = None
         self.reference_nifti_file = None
 
     @property
@@ -38,19 +32,6 @@ class DataHandler:
             self.input_mode is not None
         ), "Input mode not set. Please validate the input images first by calling .validate_images(...)."
         return self.input_mode
-
-    # def get_num_input_modalities(self) -> int:
-    #     """Get the number of input modalities.
-
-    #     Returns:
-    #         int: Number of input modalities.
-    #     Raises:
-    #         AssertionError: If the number of input modalities is not set (i.e. input images were not validated)
-    #     """
-    #     assert (
-    #         self.num_input_modalities is not None
-    #     ), "Number of input modalities not set. Please validate the input images first by calling .validate_images(...)."
-    #     return self.num_input_modalities
 
     @property
     def get_reference_nifti_file(self) -> Path | str:
@@ -85,13 +66,13 @@ class DataHandler:
         t1: str | Path | np.ndarray | None = None,
         t2: str | Path | np.ndarray | None = None,
     ) -> List[np.ndarray | None] | List[Path | None]:
-        """Validate the input images. \n
+        """Validate inputs. \n
         Verify that the input images
             - exist (for paths)
             - are all of the same type (NumPy or NIfTI).
             - have the correct shape (ATLAS_SPACE_SHAPE).
 
-        Sets internal variables input_mode, num_input_modalities and reference_nifti_file.
+        Sets internal variables input_mode and reference_nifti_file.
 
         Args:
             t1c (str | Path | np.ndarray | None, optional): T1C modality. Defaults to None.
@@ -103,7 +84,6 @@ class DataHandler:
             List[np.ndarray | None] | List[Path | None]: List of validated images.
         Raises:
             FileNotFoundError: If a file is not found.
-        Raises:
             ValueError: If a file path is not a NIfTI file (.nii or .nii.gz).
         """
 
@@ -147,11 +127,11 @@ class DataHandler:
         assert (
             len(unique_types) == 1
         ), f"All passed images must be of the same type! Received {unique_types}. Accepted Input types: {list(DataMode)}"
-        self.num_input_modalities = len(not_none_images)
+
         if self.input_mode is DataMode.NIFTI_FILE:
             self.reference_nifti_file = not_none_images[0]
         logger.info(
-            f"Successfully validated input images (received {self.num_input_modalities}). Input mode: {self.input_mode}"
+            f"Successfully validated input images (received {len(not_none_images)}). Input mode: {self.input_mode}"
         )
         return images
 
@@ -165,7 +145,6 @@ class DataHandler:
             InferenceMode: Inference mode based on the combination of input images.
         Raises:
             NotImplementedError: If no model is implemented for the combination of input images.
-        Raises:
             AssertionError: If the input mode is not set (i.e. input images were not validated)
         """
         assert (
@@ -221,31 +200,3 @@ class DataHandler:
             raise NotImplementedError(
                 f"Input mode {self.input_mode} not implemented. Available modes: {list(DataMode)}"
             )
-
-    # def save_as_nifti(
-    #     self, postproc_data: Dict[str, np.ndarray], output_file_mapping: Dict[str, str]
-    # ) -> None:
-    #     """Save post-processed data as NIFTI files.
-
-    #     Args:
-    #         postproc_data (Dict[str, np.ndarray]): Post-processed data.
-    #         output_file_mapping (Dict[str,str]): Mapping of output keys to output file paths.
-    #     """
-    #     # determine affine/ header
-    #     if self.get_input_mode() == DataMode.NIFTI_FILE:
-    #         reference_file = self.get_reference_nifti_file()
-    #         ref = nib.load(reference_file)
-    #         affine, header = ref.affine, ref.header
-    #     else:
-    #         logger.warning(
-    #             f"Writing NIFTI output after NumPy input, using default affine=np.eye(4) and header=None"
-    #         )
-    #         affine, header = np.eye(4), None
-    #     # save NIfTI files
-    #     for key, data in postproc_data.items():
-    #         output_file = output_file_mapping[key]
-    #         if output_file:
-    #             output_image = nib.Nifti1Image(data, affine, header)
-    #             os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    #             nib.save(output_image, output_file)
-    #             logger.info(f"Saved {key} to {output_file}")

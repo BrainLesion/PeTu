@@ -1,15 +1,9 @@
 from __future__ import annotations
 
-import json
-import logging
 import os
-import signal
-import sys
 import tempfile
-import traceback
-from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import numpy as np
 import torch
@@ -26,6 +20,13 @@ class Inferer:
         device: Optional[str] = "cuda",
         cuda_visible_devices: Optional[str] = "0",
     ) -> None:
+        """
+        Initialize the Inferer class.
+
+        Args:
+            device (Optional[str], optional): torch device string. Defaults to "cuda".
+            cuda_visible_devices (Optional[str], optional): CUDA_VISIBLE_DEVICES environment variable. Defaults to "0".
+        """
         self.device = self._configure_device(
             requested_device=device,
             cuda_visible_devices=cuda_visible_devices,
@@ -38,6 +39,10 @@ class Inferer:
     ) -> torch.device:
         """Configure the device for inference based on the specified config.device.
 
+        Args:
+            requested_device (str): Requested device.
+            cuda_visible_devices (str): CUDA_VISIBLE_DEVICES environment variable.
+
         Returns:
             torch.device: Configured device.
         """
@@ -49,11 +54,6 @@ class Inferer:
             if torch.cuda.is_available():
                 # clean memory
                 torch.cuda.empty_cache()
-                logger.debug(
-                    f"Set CUDA_VISIBLE_DEVICES to {os.environ['CUDA_VISIBLE_DEVICES']}"
-                )
-                logger.debug(f"Available CUDA devices: {torch.cuda.device_count()}")
-                logger.debug(f"Current CUDA devices: {torch.cuda.current_device()}")
 
         logger.info(f"Set torch device: {device}")
 
@@ -69,7 +69,21 @@ class Inferer:
         ET_segmentation_file: Optional[str | Path] = None,
         CC_segmentation_file: Optional[str | Path] = None,
         T2H_segmentation_file: Optional[str | Path] = None,
-    ) -> Dict[str, np.ndarray]:
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Infer segmentations based on provided images.
+
+        Args:
+            t1c (Optional[str  |  Path  |  np.ndarray], optional): T1C image. Defaults to None.
+            fla (Optional[str  |  Path  |  np.ndarray], optional): FLAIR image. Defaults to None.
+            t1 (Optional[str  |  Path  |  np.ndarray], optional): T1 image. Defaults to None.
+            t2 (Optional[str  |  Path  |  np.ndarray], optional): T2 image. Defaults to None.
+            ET_segmentation_file (Optional[str  |  Path], optional): Path to save ET segmentation. Defaults to None.
+            CC_segmentation_file (Optional[str  |  Path], optional): Path to save CC segmentation. Defaults to None.
+            T2H_segmentation_file (Optional[str  |  Path], optional): Path to save T2H segmentation. Defaults to None.
+
+        Returns:
+            Tuple[np.ndarray, np.ndarray, np.ndarray]: Tuple of segmentations: (ET, CC, T2H) as numpy arrays.
+        """
 
         # check inputs and get mode , if mode == prev mode => run inference, else load new model
         validated_images = self.data_handler.validate_images(

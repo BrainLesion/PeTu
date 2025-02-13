@@ -5,17 +5,13 @@ import sys
 import zipfile
 from io import BytesIO
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import requests
 from loguru import logger
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from petu.constants import (
-    WEIGHTS_DIR_PATTERN,
-    WEIGHTS_FOLDER,
-    ZENODO_RECORD_URL,
-)
+from petu.constants import WEIGHTS_DIR_PATTERN, WEIGHTS_FOLDER, ZENODO_RECORD_URL
 
 
 def check_weights_path() -> Path:
@@ -94,7 +90,7 @@ def _get_latest_version_folder_name(folders: List[Path]) -> str | None:
     return latest_downloaded_folder.name
 
 
-def _get_zenodo_metadata_and_archive_url() -> Dict | None:
+def _get_zenodo_metadata_and_archive_url() -> Tuple[Dict, str] | None:
     """Get the metadata for the Zenodo record and the files archive url.
 
     Returns:
