@@ -25,7 +25,17 @@ pip install petu
 A minimal example to create a segmentation could look like this:
 
 ```python
-    # example
+from petu import Inferer
+inferer = Inferer()
+inferer.infer(
+    t1c="path/to/t1c.nii.gz",
+    fla="path/to/fla.nii.gz",
+    t1="path/to/t1.nii.gz",
+    t2="path/to/t2.nii.gz",
+    ET_segmentation_file="example/ET.nii.gz",
+    CC_segmentation_file="example/CC.nii.gz",
+    T2H_segmentation_file="example/T2H.nii.gz",
+)
 ```
 
 <!-- For more examples and details please refer to our extensive Notebook tutorials here [NBViewer](https://nbviewer.org/github/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb) ([GitHub](https://github.com/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb)). For the best experience open the notebook in Colab. -->
