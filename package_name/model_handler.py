@@ -12,14 +12,14 @@ import torch
 from loguru import logger
 from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
 
-from package_name.constants import (
+from petu.constants import (
     SEGMENTATION_THRESHOLD,
     WEIGHTS_DIR_PATTERN,
     InferenceMode,
     SEGMENTATION_LABELS,
 )
 
-# from brainles_aurora.utils import check_model_weights
+from petu.weights import check_weights_path
 
 
 class ModelHandler:
@@ -32,7 +32,7 @@ class ModelHandler:
         self.inference_mode = None
 
         # get location of model weights
-        self.model_weights_folder = Path()  # check_model_weights()
+        self.model_weights_folder = check_weights_path()
 
     def load_model(self, inference_mode: InferenceMode) -> None:
 
@@ -45,7 +45,7 @@ class ModelHandler:
                 device=self.device,
             )
             self.predictor.initialize_from_trained_model_folder(
-                "/home/marcelrosier/pediatric_test/Dataset500_t1c_fla_t1_t2/nnUNetTrainer__nnUNetPlans__3d_fullres",  # TODO make dependent on inference_mode
+                self.model_weights_folder / self.inference_mode.value.replace("-", "_"),
                 use_folds=("all"),
                 checkpoint_name="checkpoint_final.pth",
             )
@@ -82,12 +82,15 @@ class ModelHandler:
         CC_segmentation_file: Optional[str | Path] = None,
         T2H_segmentation_file: Optional[str | Path] = None,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+
         with tempfile.TemporaryDirectory() as tmpdir:
             str_paths = [str(f) for f in input_file_paths]
             self.predictor.predict_from_files(
                 [str_paths],
                 tmpdir,
                 save_probabilities=True,
+                num_processes_preprocessing=1,
+                num_processes_segmentation_export=1,
             )
             et, cc, t2h, affine = self.threshold_probabilities(
                 results_dir=Path(tmpdir),
@@ -99,6 +102,8 @@ class ModelHandler:
                 [ET_segmentation_file, CC_segmentation_file, T2H_segmentation_file],
             ):
                 if path is not None:
+                    path = Path(path)
+                    path.parent.mkdir(parents=True, exist_ok=True)
                     nib.save(
                         nib.Nifti1Image(data, affine),
                         path,

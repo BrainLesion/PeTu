@@ -15,8 +15,8 @@ import numpy as np
 import torch
 from loguru import logger
 
-from package_name.data_handler import DataHandler
-from package_name.model_handler import ModelHandler
+from petu.data_handler import DataHandler
+from petu.model_handler import ModelHandler
 
 
 class Inferer:
@@ -90,7 +90,7 @@ class Inferer:
                 tmp_folder=Path(tmpdir),
             )
 
-            logger.info(f"Running inference on device := {self.device}")
+            logger.info(f"Running inference on device: {self.device}")
             np_results = self.model_handler.infer(
                 input_file_paths=input_file_paths,
                 ET_segmentation_file=ET_segmentation_file,

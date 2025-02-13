@@ -6,7 +6,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 enable = true
 
 [tool.poetry]
-name = "package_name"
+name = "petu"
 version = "0.0.0.dev"
 description = ""
 authors = [
@@ -30,6 +30,7 @@ nibabel = "^5.3.2"
 loguru = "^0.7.3"
 torch = "^2.6.0"
 nnunetv2 = "2.5.2"
+rich = "^13.9.4"
 
 
 [tool.poetry.group.dev.dependencies]
