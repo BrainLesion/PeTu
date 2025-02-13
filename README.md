@@ -4,8 +4,8 @@
 [![Stable Version](https://img.shields.io/pypi/v/petu?label=stable)](https://pypi.python.org/pypi/petu/)
 [![Documentation Status](https://readthedocs.org/projects/petu/badge/?version=latest)](http://petu.readthedocs.io/?badge=latest)
 [![tests](https://github.com/BrainLesion/petu/actions/workflows/tests.yml/badge.svg)](https://github.com/BrainLesion/petu/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<!-- [![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu) -->
 
 Description 
 ## Features
@@ -13,7 +13,7 @@ Description
 
 ## Installation
 
-With a Python 3.8+ environment, you can install `petu` directly from [PyPI](https://pypi.org/project/petu/):
+With a Python 3.10+ environment, you can install `petu` directly from [PyPI](https://pypi.org/project/petu/):
 
 ```bash
 pip install petu
