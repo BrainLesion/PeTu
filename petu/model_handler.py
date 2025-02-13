@@ -47,7 +47,6 @@ class ModelHandler:
             self.predictor.initialize_from_trained_model_folder(
                 self.model_weights_folder / self.inference_mode.value.replace("-", "_"),
                 use_folds=("all"),
-                checkpoint_name="checkpoint_final.pth",
             )
 
             logger.debug(f"Successfully loaded model.")
@@ -89,8 +88,6 @@ class ModelHandler:
                 [str_paths],
                 tmpdir,
                 save_probabilities=True,
-                num_processes_preprocessing=1,
-                num_processes_segmentation_export=1,
             )
             et, cc, t2h, affine = self.threshold_probabilities(
                 results_dir=Path(tmpdir),

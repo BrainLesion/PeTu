@@ -43,7 +43,7 @@ class Inferer:
         """
         device = torch.device(requested_device)
         if device.type == "cuda":
-            # The env vars have to be set ebfore the first call to torch.cuda, else torch will always attempt to use the first device
+            # The env vars have to be set before the first call to torch.cuda, else torch will always attempt to use the first device
             os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
             os.environ["CUDA_VISIBLE_DEVICES"] = cuda_visible_devices
             if torch.cuda.is_available():
