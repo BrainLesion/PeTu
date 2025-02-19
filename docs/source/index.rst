@@ -1,4 +1,4 @@
-PACKAGE_NAME documentation
+PeTU documentation
 ===================
 
 .. include:: ../README_preprocessed.md

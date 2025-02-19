@@ -6,10 +6,14 @@ build-backend = "poetry_dynamic_versioning.backend"
 enable = true
 
 [tool.poetry]
-name = "package_name"
-version = "0.0.0"
+name = "petu"
+version = "0.0.0.dev"
 description = ""
-authors = ["Florian Kofler <florian.kofler@tum.de>"]
+authors = [
+    "Marcel Rosier <marcel.rosier@tum.de>",
+    "Florian Kofler <florian.kofler@tum.de>",
+]
+
 repository = "https://www.TODO.com"
 homepage = "https://www.TODO.com"
 documentation = "https://www.TODO.com"
@@ -20,10 +24,16 @@ readme = "README.md"
 exclude = ["examples", "benchmark"]
 
 [tool.poetry.dependencies]
-python = ">=3.9"
+python = "^3.10"
+numpy = "^2.2.2"
+nibabel = "^5.3.2"
+loguru = "^0.7.3"
+torch = "^2.6.0"
+nnunetv2 = "2.5.2"
+rich = "^13.9.4"
 
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = ">=8.0.0"
 pytest-cov = ">=5.0.0"
 flake8 = ">=4.0.1"

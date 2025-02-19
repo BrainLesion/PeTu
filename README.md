@@ -1,11 +1,11 @@
-# PACKAGE_NAME
+# PeTU
 
-[![Python Versions](https://img.shields.io/pypi/pyversions/PACKAGE_NAME)](https://pypi.org/project/PACKAGE_NAME/)
-[![Stable Version](https://img.shields.io/pypi/v/PACKAGE_NAME?label=stable)](https://pypi.python.org/pypi/PACKAGE_NAME/)
-[![Documentation Status](https://readthedocs.org/projects/PACKAGE_NAME/badge/?version=latest)](http://PACKAGE_NAME.readthedocs.io/?badge=latest)
-[![tests](https://github.com/BrainLesion/PACKAGE_NAME/actions/workflows/tests.yml/badge.svg)](https://github.com/BrainLesion/PACKAGE_NAME/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/gh/BrainLesion/PACKAGE_NAME/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/PACKAGE_NAME)
+[![Python Versions](https://img.shields.io/pypi/pyversions/petu)](https://pypi.org/project/petu/)
+[![Stable Version](https://img.shields.io/pypi/v/petu?label=stable)](https://pypi.python.org/pypi/petu/)
+[![Documentation Status](https://readthedocs.org/projects/petu/badge/?version=latest)](http://petu.readthedocs.io/?badge=latest)
+[![tests](https://github.com/BrainLesion/petu/actions/workflows/tests.yml/badge.svg)](https://github.com/BrainLesion/petu/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+<!-- [![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu) -->
 
 Description 
 ## Features
@@ -13,10 +13,10 @@ Description
 
 ## Installation
 
-With a Python 3.8+ environment, you can install `PACKAGE_NAME` directly from [PyPI](https://pypi.org/project/PACKAGE_NAME/):
+With a Python 3.10+ environment, you can install `petu` directly from [PyPI](https://pypi.org/project/petu/):
 
 ```bash
-pip install PACKAGE_NAME
+pip install petu
 ```
 
 
@@ -25,15 +25,25 @@ pip install PACKAGE_NAME
 A minimal example to create a segmentation could look like this:
 
 ```python
-    # example
+from petu import Inferer
+inferer = Inferer()
+inferer.infer(
+    t1c="path/to/t1c.nii.gz",
+    fla="path/to/fla.nii.gz",
+    t1="path/to/t1.nii.gz",
+    t2="path/to/t2.nii.gz",
+    ET_segmentation_file="example/ET.nii.gz",
+    CC_segmentation_file="example/CC.nii.gz",
+    T2H_segmentation_file="example/T2H.nii.gz",
+)
 ```
 
-<!-- For more examples and details please refer to our extensive Notebook tutorials here [NBViewer](https://nbviewer.org/github/BrainLesion/tutorials/blob/main/PACKAGE_NAME/tutorial.ipynb) ([GitHub](https://github.com/BrainLesion/tutorials/blob/main/PACKAGE_NAME/tutorial.ipynb)). For the best experience open the notebook in Colab. -->
+<!-- For more examples and details please refer to our extensive Notebook tutorials here [NBViewer](https://nbviewer.org/github/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb) ([GitHub](https://github.com/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb)). For the best experience open the notebook in Colab. -->
 
 
 ## Citation
 
-If you use PACKAGE_NAME in your research, please cite it to support the development!
+If you use `petu` in your research, please cite it to support the development!
 
 ```
 TODO: citation will be added asap
@@ -45,7 +55,7 @@ We welcome all kinds of contributions from the community!
 
 ### Reporting Bugs, Feature Requests and Questions
 
-Please open a new issue [here](https://github.com/BrainLesion/PACKAGE_NAME/issues).
+Please open a new issue [here](https://github.com/BrainLesion/petu/issues).
 
 ### Code contributions
 
