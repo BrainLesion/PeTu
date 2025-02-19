@@ -1,4 +1,4 @@
-# PeTU
+# PeTu
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/petu)](https://pypi.org/project/petu/)
 [![Stable Version](https://img.shields.io/pypi/v/petu?label=stable)](https://pypi.python.org/pypi/petu/)
