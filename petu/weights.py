@@ -21,14 +21,16 @@ def check_weights_path() -> Path:
         Path: Path to the weights folder.
     """
 
-    zenodo_metadata, archive_url = _get_zenodo_metadata_and_archive_url()
+    zenodo_data = _get_zenodo_metadata_and_archive_url()
+    if zenodo_data:
+        zenodo_metadata, archive_url = zenodo_data
 
     matching_folders = list(WEIGHTS_FOLDER.glob(WEIGHTS_DIR_PATTERN))
     # Get the latest downloaded weights
     latest_downloaded_weights = _get_latest_version_folder_name(matching_folders)
 
     if not latest_downloaded_weights:
-        if not zenodo_metadata:
+        if not zenodo_data:
             logger.error(
                 "Weights not found locally and Zenodo could not be reached. Exiting..."
             )
@@ -51,7 +53,7 @@ def check_weights_path() -> Path:
     # Compare the latest downloaded weights with the latest Zenodo version
     if zenodo_metadata["version"] == latest_downloaded_weights.split("_v")[1]:
         logger.info(
-            f"Latest weights ({latest_downloaded_weights}) are already present."
+            f"Latest weights ({zenodo_metadata["version"]}) are already present."
         )
         return WEIGHTS_FOLDER / latest_downloaded_weights
 
