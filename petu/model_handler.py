@@ -80,7 +80,7 @@ class ModelHandler:
         probabilities = np.load(probabilities_file)["probabilities"]
 
         binary_data_list = []
-        for i, label in enumerate(SEGMENTATION_LABELS):
+        for i, _ in enumerate(SEGMENTATION_LABELS):
             transposed_data = np.transpose(probabilities[i], (2, 1, 0))
             binary_data = np.where(
                 transposed_data > SEGMENTATION_THRESHOLD, 1, 0
