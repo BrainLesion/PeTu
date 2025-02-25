@@ -38,11 +38,10 @@ jobs:
           python -m poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          python -m poetry run pytest --cov-branch --cov-report=xml
+          python -m poetry run pytest --cov petu
       - name: Upload results to Codecov
         # Only upload to Codecov after a merge to the main branch
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: ${{ github.repository }}
