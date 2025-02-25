@@ -53,7 +53,7 @@ def check_weights_path() -> Path:
     # Compare the latest downloaded weights with the latest Zenodo version
     if zenodo_metadata["version"] == latest_downloaded_weights.split("_v")[1]:
         logger.info(
-            f"Latest weights ({zenodo_metadata["version"]}) are already present."
+            f"Latest weights ({zenodo_metadata['version']}) are already present."
         )
         return WEIGHTS_FOLDER / latest_downloaded_weights
 
