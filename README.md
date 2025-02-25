@@ -4,8 +4,8 @@
 [![Stable Version](https://img.shields.io/pypi/v/petu?label=stable)](https://pypi.python.org/pypi/petu/)
 [![Documentation Status](https://readthedocs.org/projects/petu/badge/?version=latest)](http://petu.readthedocs.io/?badge=latest)
 [![tests](https://github.com/BrainLesion/petu/actions/workflows/tests.yml/badge.svg)](https://github.com/BrainLesion/petu/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-<!-- [![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu) -->
 
 Description 
 ## Features
@@ -26,7 +26,10 @@ A minimal example to create a segmentation could look like this:
 
 ```python
 from petu import Inferer
+
 inferer = Inferer()
+
+# Save NIfTI files
 inferer.infer(
     t1c="path/to/t1c.nii.gz",
     fla="path/to/fla.nii.gz",
@@ -35,6 +38,14 @@ inferer.infer(
     ET_segmentation_file="example/ET.nii.gz",
     CC_segmentation_file="example/CC.nii.gz",
     T2H_segmentation_file="example/T2H.nii.gz",
+)
+
+# Or directly use NumPy data. (Both works as well)
+et, cc, t2h = inferer.infer(
+    t1c="path/to/t1c.nii.gz",
+    fla="path/to/fla.nii.gz",
+    t1="path/to/t1.nii.gz",
+    t2="path/to/t2.nii.gz",
 )
 ```
 

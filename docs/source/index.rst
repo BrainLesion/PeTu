@@ -20,3 +20,6 @@ Sections
    :maxdepth: 2
    :caption: API Reference:
 
+   inferer
+   constants
+
