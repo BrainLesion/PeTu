@@ -37,7 +37,10 @@ blosc2 = "^2.0.0"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0.0"
 pytest-cov = ">=5.0.0"
-flake8 = ">=4.0.1"
+flake8 = ">=5.0.0"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
 
 [tool.poetry.group.docs]
 optional = true
