@@ -40,12 +40,12 @@ inferer.infer(
     T2H_segmentation_file="example/T2H.nii.gz",
 )
 
-# Or directly use NumPy data. (Both works as well)
+# Or directly use pre-loaded NumPy data. (Both outputs work as well)
 et, cc, t2h = inferer.infer(
-    t1c="path/to/t1c.nii.gz",
-    fla="path/to/fla.nii.gz",
-    t1="path/to/t1.nii.gz",
-    t2="path/to/t2.nii.gz",
+    t1c=t1c_np,
+    fla=fla_np,
+    t1=t1_np,
+    t2=t2_np,
 )
 ```
 
