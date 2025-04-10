@@ -60,16 +60,10 @@ e.g. Conda environment with Python 3.10. Check your Python version with:
 python --version
 ```
 
-### Docker version
-please specify your docker version, You can find it by running: 
+### Version of PeTu ?
+please specify your version of PeTu (please make sure you run the latest version):
 ```sh
-docker --version
-```
-
-### Version of brats ?
-please specify your version of brats (please make sure you run the latest version):
-```sh
-pip freeze | grep brats
+pip freeze | grep petu
 ```
 
 **Additional context**
