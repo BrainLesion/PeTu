@@ -8,6 +8,6 @@ assignees: ''
 ---
 
 # Your question
-Have you already checked out our [tutorials](https://github.com/BrainLesion/tutorials/)? 
+Have you already checked out our [tutorials](https://github.com/BrainLesion/tutorials)? 
 
 If you didn't find the answer, we are here to help :)
