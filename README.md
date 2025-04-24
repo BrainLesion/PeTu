@@ -48,7 +48,8 @@ et, cc, t2h = inferer.infer(
     t2=t2_np,
 )
 ```
-
+> [!NOTE]  
+>If you're interested in the PeTu package, the [Pediatric Segmentation](https://github.com/BrainLesion/BraTS?tab=readme-ov-file#pediatric-segmentation) may also be of interest.
 <!-- For more examples and details please refer to our extensive Notebook tutorials here [NBViewer](https://nbviewer.org/github/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb) ([GitHub](https://github.com/BrainLesion/tutorials/blob/main/petu/tutorial.ipynb)). For the best experience open the notebook in Colab. -->
 
 
