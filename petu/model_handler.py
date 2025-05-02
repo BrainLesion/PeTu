@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional, Tuple
 
+import cc3d
 import nibabel as nib
 import numpy as np
 import torch
@@ -88,12 +89,36 @@ class ModelHandler:
             binary_data_list.append(binary_data)
         return *binary_data_list, affine
 
+    def remove_dust(
+        self, segmentation: np.ndarray, threshold: int = 0, connectivity: int = 26
+    ):
+        """
+        Remove dust from the segmentation.
+
+        Args:
+            threshold (int, optional): Minimum size of connected components to keep. Defaults to 0.
+            connectivity (int, optional): Connectivity for connected component analysis. Defaults to 26. Reference: https://en.wikipedia.org/wiki/Pixel_connectivity
+        """
+        if threshold > 0:
+            cc3d.dust(
+                segmentation,
+                threshold=threshold,
+                connectivity=connectivity,
+                in_place=True,
+            )
+
     def infer(
         self,
         input_file_paths: List[Path],
         ET_segmentation_file: Optional[str | Path] = None,
         CC_segmentation_file: Optional[str | Path] = None,
         T2H_segmentation_file: Optional[str | Path] = None,
+        et_dust_threshold: int = 0,
+        et_dust_connectivity: int = 26,
+        cc_dust_threshold: int = 0,
+        cc_dust_connectivity: int = 26,
+        t2h_dust_threshold: int = 0,
+        t2h_dust_connectivity: int = 26,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Run inference on the provided images and save the segmentations to disk if paths are provided.
 
@@ -102,6 +127,12 @@ class ModelHandler:
             ET_segmentation_file (Optional[str  |  Path], optional): Path to save ET segmentation. Defaults to None.
             CC_segmentation_file (Optional[str  |  Path], optional): Path to save CC segmentation. Defaults to None.
             T2H_segmentation_file (Optional[str  |  Path], optional): Path to save T2H segmentation. Defaults to None.
+            et_dust_threshold (int, optional): Minimum size of connected components to keep for ET. Defaults to 0.
+            et_dust_connectivity (int, optional): Connectivity for connected component analysis for ET. Defaults to 26.
+            cc_dust_threshold (int, optional): Minimum size of connected components to keep for CC. Defaults to 0.
+            cc_dust_connectivity (int, optional): Connectivity for connected component analysis for CC. Defaults to 26.
+            t2h_dust_threshold (int, optional): Minimum size of connected components to keep for T2H. Defaults to 0.
+            t2h_dust_connectivity (int, optional): Connectivity for connected component analysis for T2H. Defaults to 26.
 
         Returns:
             Tuple[np.ndarray, np.ndarray, np.ndarray]: Tuple of segmentations: (ET, CC, T2H) as numpy arrays.
@@ -116,6 +147,23 @@ class ModelHandler:
             )
             et, cc, t2h, affine = self.threshold_probabilities(
                 results_dir=Path(tmpdir),
+            )
+
+            # remove dust from segmentations
+            self.remove_dust(
+                et,
+                threshold=et_dust_threshold,
+                connectivity=et_dust_connectivity,
+            )
+            self.remove_dust(
+                cc,
+                threshold=cc_dust_threshold,
+                connectivity=cc_dust_connectivity,
+            )
+            self.remove_dust(
+                t2h,
+                threshold=t2h_dust_threshold,
+                connectivity=t2h_dust_connectivity,
             )
 
             # save segmentations to disk

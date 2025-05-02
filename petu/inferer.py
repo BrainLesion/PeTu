@@ -69,6 +69,12 @@ class Inferer:
         ET_segmentation_file: Optional[str | Path] = None,
         CC_segmentation_file: Optional[str | Path] = None,
         T2H_segmentation_file: Optional[str | Path] = None,
+        et_dust_threshold: int = 0,
+        et_dust_connectivity: int = 26,
+        cc_dust_threshold: int = 0,
+        cc_dust_connectivity: int = 26,
+        t2h_dust_threshold: int = 0,
+        t2h_dust_connectivity: int = 26,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Infer segmentations based on provided images.
 
@@ -80,6 +86,12 @@ class Inferer:
             ET_segmentation_file (Optional[str  |  Path], optional): Path to save ET segmentation. Defaults to None.
             CC_segmentation_file (Optional[str  |  Path], optional): Path to save CC segmentation. Defaults to None.
             T2H_segmentation_file (Optional[str  |  Path], optional): Path to save T2H segmentation. Defaults to None.
+            et_dust_threshold (int, optional): Minimum size of connected components to keep for ET. Defaults to 0.
+            et_dust_connectivity (int, optional): Connectivity for connected component analysis for ET. Defaults to 26. Reference: https://en.wikipedia.org/wiki/Pixel_connectivity
+            cc_dust_threshold (int, optional): Minimum size of connected components to keep for CC. Defaults to 0.
+            cc_dust_connectivity (int, optional): Connectivity for connected component analysis for CC. Defaults to 26. Reference: https://en.wikipedia.org/wiki/Pixel_connectivity
+            t2h_dust_threshold (int, optional): Minimum size of connected components to keep for T2H. Defaults to 0.
+            t2h_dust_connectivity (int, optional): Connectivity for connected component analysis for T2H. Defaults to 26. Reference: https://en.wikipedia.org/wiki/Pixel_connectivity
 
         Returns:
             Tuple[np.ndarray, np.ndarray, np.ndarray]: Tuple of segmentations: (ET, CC, T2H) as numpy arrays.
@@ -110,6 +122,12 @@ class Inferer:
                 ET_segmentation_file=ET_segmentation_file,
                 CC_segmentation_file=CC_segmentation_file,
                 T2H_segmentation_file=T2H_segmentation_file,
+                et_dust_threshold=et_dust_threshold,
+                et_dust_connectivity=et_dust_connectivity,
+                cc_dust_threshold=cc_dust_threshold,
+                cc_dust_connectivity=cc_dust_connectivity,
+                t2h_dust_threshold=t2h_dust_threshold,
+                t2h_dust_connectivity=t2h_dust_connectivity,
             )
             logger.info(f"Finished inference")
             return np_results
