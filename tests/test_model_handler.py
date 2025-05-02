@@ -136,3 +136,38 @@ def test_infer_saving(
             call(mock_nifti_img, Path(t2h_path)),
         ]
     )
+
+
+def test_no_dust_removed_when_threshold_zero(mock_model_handler):
+    seg = np.zeros((5, 5, 5), dtype=np.uint8)
+    seg[2, 2, 2] = 1  # Small component
+
+    original = seg.copy()
+    mock_model_handler.remove_dust(seg, threshold=0, connectivity=26)
+
+    assert np.array_equal(seg, original)
+
+
+def test_dust_removed_above_threshold(mock_model_handler):
+    seg = np.zeros((5, 5, 5), dtype=np.uint8)
+    seg[2, 2, 2] = 1  # Single voxel
+
+    mock_model_handler.remove_dust(seg, threshold=2, connectivity=26)
+    assert np.all(seg == 0)
+
+
+def test_dust_kept_below_threshold(mock_model_handler):
+    seg = np.zeros((5, 5, 5), dtype=np.uint8)
+    seg[2, 2, 2] = 1
+    seg[2, 2, 3] = 1  # Two connected voxels
+
+    original = seg.copy()
+    mock_model_handler.remove_dust(seg, threshold=2, connectivity=26)
+    assert np.array_equal(seg, original)
+
+
+def test_no_op_on_all_ones(mock_model_handler):
+    seg = np.ones((3, 3, 3), dtype=np.uint8)
+    original = seg.copy()
+    mock_model_handler.remove_dust(seg, threshold=0)
+    assert np.array_equal(seg, original)
