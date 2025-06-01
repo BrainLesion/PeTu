@@ -7,7 +7,13 @@
 [![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Description 
+PeTu is a fully automated pipeline for segmenting pediatric brain tumors. It uses a 3D nnU-Net framework trained on co-registered multi-parametric MRI scans, including T1c, T1n, T2w, and T2f sequences. Subsequently, the model provides segmented tumor regions, including:
+1. T2-hyperintense region (T2H) – typically encompassing solid tumor mass and associated edema.
+2. Enhancing tumor (ET) – regions with contrast uptake, indicative of active or aggressive tumor areas.
+3. Cystic component (CC) – fluid-filled regions often seen in certain pediatric tumor types.
+<!--
+TODO: 4. Whole tumor (WT) – an aggregate mask including all visible tumor components
+-->
 ## Features
 
 
