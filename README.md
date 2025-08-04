@@ -7,13 +7,12 @@
 [![codecov](https://codecov.io/gh/BrainLesion/petu/graph/badge.svg?token=A7FWUKO9Y4)](https://codecov.io/gh/BrainLesion/petu)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-PeTu is a fully automated pipeline for segmenting pediatric brain tumors. It uses a 3D nnU-Net framework trained on co-registered multi-parametric MRI scans, including T1c, T1n, T2w, and T2f sequences. Subsequently, the model provides segmented tumor regions, including:
+PeTu is a fully automated pipeline for segmenting pediatric brain tumors. It uses a 3D nnU-Net model trained on co-registered multi-parametric MRI scans, including T1c, T1n, T2w, and T2f sequences. Subsequently, the model provides segmented tumor regions, including:
+
 1. T2-hyperintense region (T2H) – typically encompassing solid tumor mass and associated edema.
 2. Enhancing tumor (ET) – regions with contrast uptake, indicative of active or aggressive tumor areas.
 3. Cystic component (CC) – fluid-filled regions often seen in certain pediatric tumor types.
-<!--
-TODO: 4. Whole tumor (WT) – an aggregate mask including all visible tumor components
--->
+
 ## Features
 
 
@@ -60,11 +59,20 @@ et, cc, t2h = inferer.infer(
 
 
 ## Citation
+Please support our development by citing the following manuscripts:
 
-If you use `petu` in your research, please cite it to support the development!
+[Enhancing efficiency in paediatric brain tumour segmentation using a pathologically diverse single-center clinical dataset](https://doi.org/10.48550/arXiv.2507.22152)
 
 ```
-TODO: citation will be added asap
+@misc{piffer2025enhancingefficiencypaediatricbrain,
+      title={Enhancing efficiency in paediatric brain tumour segmentation using a pathologically diverse single-center clinical dataset}, 
+      author={A. Piffer and J. A. Buchner and A. G. Gennari and P. Grehten and S. Sirin and E. Ross and I. Ezhov and M. Rosier and J. C. Peeken and M. Piraud and B. Menze and A. Guerreiro Stücklin and A. Jakab and F. Kofler},
+      year={2025},
+      eprint={2507.22152},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2507.22152}, 
+}
 ```
 
 ## Contributing
