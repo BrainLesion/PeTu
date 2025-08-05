@@ -4,7 +4,8 @@ import os
 from rich.console import Console
 
 console = Console()
-CITATION_LINK = "https://github.com/BrainLesion/PeTu#citation"
+PETU_CITATION_LINK = "https://github.com/BrainLesion/PeTu#citation"
+BRAINLESION_CITATION_LINK = "https://github.com/BrainLesion#-citing-brainlesion-suite"
 
 
 def citation_reminder(func):
@@ -24,13 +25,19 @@ def citation_reminder(func):
         if os.environ.get("PETU_CITATION_REMINDER", "true").lower() == "true":
             console.rule("Thank you for using [bold]PeTu[/bold]")
             console.print(
-                "Please support our development by citing",
+                "PeTu is developed as part of the BrainLesion project.",
                 justify="center",
             )
             console.print(
-                f"{CITATION_LINK} -- Thank you!",
+                "Please support our development by citing the PeTu and BrainLesion manuscripts:",
                 justify="center",
             )
+            console.print(
+                f"{PETU_CITATION_LINK}",
+                justify="center",
+            )
+            console.print(BRAINLESION_CITATION_LINK, justify="center")
+            console.print("Thanks!", justify="center")
             console.rule()
             console.line()
         return func(*args, **kwargs)
