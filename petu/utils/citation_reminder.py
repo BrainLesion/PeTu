@@ -3,6 +3,7 @@ import os
 
 from rich.console import Console
 
+console = Console()
 CITATION_LINK = "https://github.com/BrainLesion/PeTu#citation"
 
 
@@ -21,7 +22,6 @@ def citation_reminder(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if os.environ.get("PETU_CITATION_REMINDER", "true").lower() == "true":
-            console = Console()
             console.rule("Thank you for using [bold]PeTu[/bold]")
             console.print(
                 "Please support our development by citing",
