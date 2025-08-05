@@ -11,6 +11,7 @@ from loguru import logger
 
 from petu.data_handler import DataHandler
 from petu.model_handler import ModelHandler
+from petu.utils.citation_reminder import citation_reminder
 
 
 class Inferer:
@@ -59,7 +60,7 @@ class Inferer:
 
         return device
 
-    # @citation_reminder
+    @citation_reminder
     def infer(
         self,
         t1c: Optional[str | Path | np.ndarray] = None,
