@@ -20,7 +20,7 @@ PeTu is a fully automated pipeline for segmenting pediatric brain tumors. It use
 
 PeTu is trained on pediatric brain MRI data from the Children's Hospital Zurich (Kispi), including cases with optic glioma affecting the optic nerve.
 
-The model expects co-registered multi-parametric MRI scans (T1c, T1n, T2w, T2f) that have been registered to the SRI-24 brain atlas (template).
+The model expects multi-parametric MRI scans (T1c, T1n, T2w, T2f) that are co-registered to T1c and then brought into SRI-24 brain atlas space.
 
 **Important:** Since PeTu handles optic gliomas affecting the optic nerve, input data should be **raw brain scans without defacing or skull-stripping** to preserve critical anatomical structures. However, it may be worth experimenting with skull-stripped (BET) or defaced brain scans depending on your specific use case.
 
