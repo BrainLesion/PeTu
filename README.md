@@ -24,7 +24,7 @@ The model expects multi-parametric MRI scans (T1c, T1n, T2w, T2f) that are co-re
 
 **Important:** Since PeTu handles optic gliomas affecting the optic nerve, input data should be **raw brain scans without defacing or skull-stripping** to preserve critical anatomical structures. However, it may be worth experimenting with skull-stripped (BET) or defaced brain scans depending on your specific use case.
 
-We recommend using the <a href="https://github.com/BrainLesion/preprocessing">preprocessing package</a>, part of the <a href="https://github.com/BrainLesion">BrainLesion Suite</a>, to design custom preprocessing pipelines tailored to your specific needs.
+We recommend using the [preprocessing package](https://github.com/BrainLesion/preprocessing), part of the [BrainLesion Suite](https://github.com/BrainLesion), to design custom preprocessing pipelines tailored to your specific needs.
 You can install the package with:
 
 ```bash
