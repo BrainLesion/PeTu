@@ -16,6 +16,18 @@ PeTu is a fully automated pipeline for segmenting pediatric brain tumors. It use
 ## Features
 
 
+## Data Requirements
+
+PeTu is trained on pediatric brain MRI data from the Children's Hospital Zurich (Kispi), including cases with optic glioma affecting the optic nerve.
+
+The model expects multi-parametric MRI scans (T1c, T1n, T2w, T2f) that are co-registered to T1c and then brought into SRI-24 brain atlas space.
+
+> [!IMPORTANT]  
+>Since PeTu handles optic gliomas affecting the optic nerve, input data should be brain scans **without defacing or skull-stripping** to preserve critical anatomical structures.
+However, it may be worth experimenting with skull-stripped (BET) or defaced brain scans depending on your specific use case.
+
+We recommend using the [preprocessing package](https://github.com/BrainLesion/preprocessing), part of the [BrainLesion Suite](https://github.com/BrainLesion), to design custom preprocessing pipelines tailored to your specific needs.
+
 ## Installation
 
 With a Python 3.10+ environment, you can install `petu` directly from [PyPI](https://pypi.org/project/petu/):
